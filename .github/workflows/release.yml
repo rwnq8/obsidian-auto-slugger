@@ -18,7 +18,7 @@ jobs:
           node-version: '18' # Use a current LTS version
 
       - name: Install dependencies
-        run: npm ci # 'ci' is generally preferred for CI environments
+        run: npm install # Using npm install as no local package-lock.json is generated
 
       - name: Build plugin
         run: npm run build # This should output main.js, manifest.json
