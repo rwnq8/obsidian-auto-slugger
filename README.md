@@ -141,8 +141,11 @@ Found a bug or have an idea? Please open an issue on the [GitHub repository issu
 
 ## 📜 License
 
-This plugin is released under the [MIT License](LICENSE).
-*(You'll need to add a `LICENSE` file with the MIT license text to your repository: `https://github.com/rwnq8/auto-slugger/blob/main/LICENSE` if you add one)*
+This plugin and its content are licensed under the **QNFO Content License Agreement**.
+
+You can view the full license terms here: [https://github.com/QNFO/license/blob/main/LICENSE.md](https://github.com/QNFO/license/blob/main/LICENSE.md)
+
+By using, distributing, or contributing to this plugin, you agree to be bound by the terms of this license. Non-commercial use only. Attribution required.
 
 ---
 
