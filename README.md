@@ -1,280 +1,152 @@
 # ✨ Auto Slugger for Obsidian ✨
 
-[![Obsidian Build Version](https://img.shields.io/badge/Obsidian-v0.15.0+-purple.svg)](https://obsidian.md)
-<!-- You can add more badges later, like a release version, if you set up GitHub Actions -->
+Instantly create neat, useful "slugs" (like `104538-my-note-title`) for your notes in Obsidian!
 
-Automatically or manually create clean, descriptive slugs for your Obsidian notes (e.g., `104538-auto-slugger-plugin`). Great for permalinks, better organization, and web publishing!
+Slugs are short, URL-friendly identifiers. Auto Slugger makes them for you automatically or with a click, using a timestamp and a couple of important words from your note.
 
----
-
-## 🌟 What It Does
-
-*   **Creates Slugs:** Generates a unique identifier for your notes.
-*   **Timestamped:** Starts with a 6-digit (HHMMSS) or 12-digit (YYMMDDHHMMSS) timestamp.
-*   **Smart Words:** Adds 1-5 important words from your note's content.
-*   **Automatic or Manual:**
-    *   **Auto:** Makes slugs when you change, save, or click away from a note (you choose).
-    *   **Manual:** Make a slug anytime with a button or command.
-*   **Customizable:** You control where the slug is stored (frontmatter key), if it overwrites old slugs, and more!
+**Why use Auto Slugger?**
+*   **Better Organization:** Easily link to notes with clean, predictable IDs.
+*   **Web-Ready:** Perfect if you publish your notes online (blogs, digital gardens).
+*   **Simple & Automatic:** Set it up once, and let it work its magic!
 
 ---
 
-## 🚀 Getting Started: Installation (For End Users)
+## 🚀 Quick Start: Get Auto Slugger in Your Obsidian
 
-If you just want to use the plugin, choose **one** of the methods below. You do **not** need any special tools for this.
+The easiest way to install and keep Auto Slugger updated is using another Obsidian plugin called **BRAT**.
 
-### Method 1: Using BRAT (Easiest for updates & latest versions)
+**Step 1: Install BRAT (if you don't have it already)**
 
-BRAT is an Obsidian plugin that helps you install other plugins directly from GitHub.
+1.  Open Obsidian.
+2.  Go to `Settings` (the gear icon ⚙️ usually in the bottom-left).
+3.  Click on `Community Plugins`.
+4.  **Important:** Make sure "Safe mode" is **turned OFF**. If it's on, you can't install community plugins.
+5.  Click the `Browse` button to see available community plugins.
+6.  In the search bar, type `BRAT`.
+7.  Find `Obsidian42 - BRAT` in the list and click `Install`.
+8.  After it installs, click `Enable` to activate BRAT.
 
-1.  **Install BRAT Plugin:**
-    *   In Obsidian, go to `Settings` ⚙️ > `Community Plugins`.
-    *   Turn **OFF** "Safe mode".
-    *   Click `Browse`, search for `BRAT`, and click `Install`.
-    *   After installing, click `Enable` for BRAT.
+**Step 2: Add "Auto Slugger" using BRAT**
 
-2.  **Add "Auto Slugger" with BRAT:**
-    *   Open Obsidian's Command Palette (Windows/Linux: `Ctrl+P`, macOS: `Cmd+P`).
-    *   Type `BRAT` and select `BRAT: Add a beta plugin for testing`.
-    *   Paste this into the box: `rwnq8/obsidian-auto-slugger`
-    *   Click `Add Plugin`.
+1.  Now that BRAT is installed and enabled, open Obsidian's **Command Palette**:
+    *   Windows/Linux: `Ctrl+P`
+    *   macOS: `Cmd+P`
+2.  In the Command Palette, type `BRAT` and look for the command `BRAT: Add a beta plugin for testing`. Click it.
+3.  A box will pop up asking for a GitHub repository. Paste this exactly:
+    `rwnq8/obsidian-auto-slugger`
+4.  Click the `Add Plugin` button. BRAT will download and set up Auto Slugger.
 
-3.  **Enable "Auto Slugger":**
-    *   Go back to `Settings` ⚙️ > `Community Plugins`.
-    *   Find "Auto Slugger" in your list and **toggle it ON**.
+**Step 3: Enable "Auto Slugger"**
 
----
+1.  Go back to Obsidian `Settings` ⚙️ > `Community Plugins`.
+2.  You should now see "Auto Slugger" in your list of installed plugins.
+3.  **Make sure to turn it ON** by clicking the toggle switch next to its name.
 
-### Method 2: Manual Install from GitHub Releases (Specific, stable versions)
+🎉 **That's it! Auto Slugger is now installed.**
 
-Download specific versions of the plugin directly. This is the recommended manual method.
-
-1.  **Download Files:**
-    *   Go to: `https://github.com/rwnq8/obsidian-auto-slugger/releases`
-    *   Find the latest release (or a version you want).
-    *   Under "Assets", download `main.js` and `manifest.json`.
-        *   (If there's a `.zip` file containing these, download it and open it to find `main.js` and `manifest.json` inside.)
-
-2.  **Put Files in Obsidian:**
-    *   Open your Obsidian vault folder on your computer.
-    *   Go into the `.obsidian` folder (if you don't see it, enable "Show hidden files" in your computer's file explorer).
-    *   Go into the `plugins` folder (if it's not there, create it).
-    *   Create a **new folder** inside `plugins` named exactly: `auto-slugger`
-    *   Move the downloaded `main.js` and `manifest.json` into this `auto-slugger` folder.
-
-3.  **Enable "Auto Slugger":**
-    *   Close and re-open Obsidian.
-    *   Go to `Settings` ⚙️ > `Community Plugins`.
-    *   Find "Auto Slugger" and **toggle it ON**.
+*(Want other ways to install? See [Alternative Installation Methods](#-alternative-installation-methods) at the bottom.)*
 
 ---
 
-### Method 3: Manual Install from Repository (Very latest code, potentially less stable)
+## 🛠️ How to Use Auto Slugger
 
-Get the absolute newest code directly from the repository. This is for users who understand this might be less tested than a release.
+Once installed and enabled, Auto Slugger can work automatically or when you tell it to.
 
-1.  **Go to GitHub:**
-    *   `https://github.com/rwnq8/obsidian-auto-slugger`
+**1. Automatic Slug Generation (Recommended for most users!)**
 
-2.  **Download `main.js`:**
-    *   Click on `main.js` in the file list.
-    *   On the next page, click the "Raw" button (or a download icon).
-    *   If code appears, right-click > "Save As..." and save it as `main.js`. *(Make sure this is the built `main.js`, not the source TypeScript file if one exists at the root).*
+*   By default, Auto Slugger might be set to generate slugs automatically when you save a note or click away from it.
+*   You can change this behavior in the settings (see [Customizing Auto Slugger](#-customizing-auto-slugger) below).
 
-3.  **Download `manifest.json`:**
-    *   Go back to the main file list on GitHub.
-    *   Click on `manifest.json`.
-    *   Download it the same way you got `main.js`.
+**2. Manual Slug Generation**
 
-4.  **Put Files in Obsidian & Enable:**
-    *   Follow **Step 2 ("Put Files in Obsidian")** and **Step 3 ("Enable Auto Slugger")** from **Method 2** above.
+Need a slug right now?
+*   **Ribbon Button:** Look for a dice icon (🎲) in Obsidian's left sidebar (the ribbon). Click it while you have a note open.
+*   **Command Palette:**
+    1.  Open the Command Palette (`Ctrl+P` or `Cmd+P`).
+    2.  Type `Generate Slug`.
+    3.  Select `Auto Slugger: Generate Slug for Current Note`.
+
+**Where does the slug go?**
+The slug is added to the "frontmatter" at the very top of your note. It will look something like this:
+
+```
+---
+slug: 104538-my-important-words
+---
+
+Your note content starts here...
+```
 
 ---
 
-## 🛠️ How to Use
+## ⚙️ Customizing Auto Slugger (Settings)
 
-1.  **Configure (Optional but Recommended):**
-    *   In Obsidian, go to `Settings` ⚙️ > `Community Plugins`.
-    *   Find "Auto Slugger" and click the gear icon ⚙️ next to it for options. (See [Settings Explained](#-settings-explained) below).
+You can change how Auto Slugger works to fit your style.
 
-2.  **Generate Slugs:**
-    *   **Manually:**
-        *   Click the dice icon (🎲) in the left sidebar (ribbon).
-        *   Or, open the Command Palette (`Ctrl/Cmd+P`), type "Generate Slug", and select `Auto Slugger: Generate Slug for Current Note`.
-    *   **Automatically:**
-        *   If enabled in settings, slugs will be created based on your chosen trigger (e.g., when you stop typing or save).
+1.  Go to Obsidian `Settings` ⚙️ > `Community Plugins`.
+2.  Find "Auto Slugger" in the list and click the little gear icon ⚙️ next to it.
 
-The slug will appear in the frontmatter (at the top) of your note, like `slug: 123456-my-note`.
+**Key Settings You Might Want to Adjust:**
 
----
-
-## ⚙️ Settings Explained
-
-Access these in `Settings` > `Community Plugins` > `Auto Slugger` (gear icon).
-
-*   **Automatic Slug Generation:** (Default: `Off`)
-    *   Turn ON to make slugs automatically.
-*   **Trigger Event (for Automatic):** (Default: `On Note Save/Focus Lost`)
-    *   `On Note Change`: Makes slug shortly after you stop typing.
-    *   `On Note Save/Focus Lost`: Makes slug when note saves or you click elsewhere.
+*   **Automatic Slug Generation:** Turn this ON or OFF.
+    *   **Trigger Event:** If automatic is ON, choose *when* it makes the slug (e.g., "On Note Save/Focus Lost" is a good default, or "On Note Change" if you want it more immediate).
 *   **Slug Frontmatter Key:** (Default: `slug`)
-    *   The name used in frontmatter (e.g., `slug`, `permalink`).
-*   **Overwrite Existing Slug:** (Default: `Off`)
-    *   If ON, will replace an existing slug. If OFF, only adds if no slug is present (safer for auto-mode).
-*   **Timestamp Format:** (Default: `HHMMSS`)
-    *   `HHMMSS`: e.g., `104538`
-    *   `YYMMDDHHMMSS`: e.g., `231027104538`
+    *   This is the name used in your note's frontmatter. You can change it to `permalink` or `id` if you prefer, but `slug` is common.
+*   **Overwrite Existing Slug:** (Default: `Off` for automatic)
+    *   If OFF (safer!), automatic generation won't replace a slug if your note already has one. Manual generation usually overwrites.
+*   **Timestamp Format:** Choose between a short timestamp (e.g., `104538`) or a longer one with the date (e.g., `231027104538`).
 *   **Number of Significant Words:** (Default: `2`)
-    *   How many words (1-5) from your note to use in the slug.
-*   **Minimum Word Length:** (Default: `4`)
-    *   Shortest word length to consider for the slug.
-*   **Custom Stop Words:** (Default: *empty*)
-    *   Your own list of words to ignore (comma-separated, e.g., `project, myname`). These are in addition to common English stop words.
+    *   How many words from your note's content should be in the slug (e.g., `104538-**word-one-word-two**`). You can choose 1 to 5.
+*   **Minimum Word Length for Slug:** (Default: `4`)
+    *   Ignores very short words when picking significant words.
+*   **Enable Word Stemming:** (Default: `On`)
+    *   Tries to use the root form of words (e.g., "running" becomes "run"). This can make slugs shorter and group similar ideas. Turn it off if you prefer exact words.
+*   **Custom Stop Words:**
+    *   Auto Slugger already ignores common words like "the", "a", "is". If there are other words you *never* want in your slugs (like your name, or "project"), you can add them here as a comma-separated list (e.g., `myproject, anothertask, personal`).
+
+**Remember to save your settings if you make changes!** (Most settings save automatically as you change them).
 
 ---
 
-## 🧑‍💻 For Developers: Building the Plugin
+## ❓ Help & Questions
 
-If you want to modify the plugin or build it from the source code:
-
-### 1. Local Development Setup
-
-You'll need Node.js and npm (or yarn) installed on your computer.
-
-1.  **Clone the Repository:**
-    ```bash
-    git clone https://github.com/rwnq8/obsidian-auto-slugger.git
-    cd obsidian-auto-slugger
-    ```
-
-2.  **Install Dependencies:**
-    ```bash
-    npm install
-    # OR if you use yarn:
-    # yarn install
-    ```
-
-3.  **Build the Plugin:**
-    *   **For development (watches for changes and rebuilds automatically):**
-        ```bash
-        npm run dev
-        ```
-    *   **For a production build (creates optimized files):**
-        ```bash
-        npm run build
-        ```
-    This will typically generate `main.js` (the compiled plugin code) and update `manifest.json` in the project's root directory or a `dist/` folder, depending on the `rollup.config.js` setup.
-
-4.  **Test in Obsidian:**
-    *   Copy the built `main.js` and the `manifest.json` from your project folder.
-    *   Paste them into your Obsidian test vault at: `<YourTestVault>/.obsidian/plugins/auto-slugger/` (create the `auto-slugger` folder if it doesn't exist).
-    *   Reload Obsidian (Ctrl/Cmd+R or use the command palette "Reload app without saving").
-    *   Enable the plugin in `Settings` > `Community Plugins`.
-
-### 2. Automated Builds with GitHub Actions (For Repository Maintainers)
-
-To automatically build the plugin and create release assets (`main.js`, `manifest.json`) whenever you tag a new version on GitHub, you can use GitHub Actions.
-
-1.  **Create a Workflow File:**
-    Create a file named `.github/workflows/release.yml` in your repository with content similar to this:
-
-    ```yaml
-    name: Build Plugin and Create Release
-
-    on:
-      push:
-        tags:
-          - 'v*' # Trigger on version tags like v1.0.0, v0.2.1
-
-    jobs:
-      build_and_release:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout code
-            uses: actions/checkout@v3
-
-          - name: Set up Node.js
-            uses: actions/setup-node@v3
-            with:
-              node-version: '18' # Use a current LTS version
-
-          - name: Install dependencies
-            run: npm ci # 'ci' is generally preferred for CI environments
-
-          - name: Build plugin
-            run: npm run build # This should output main.js, manifest.json
-
-          - name: Create Release
-            id: create_release
-            uses: actions/create-release@v1
-            env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            with:
-              tag_name: ${{ github.ref }}
-              release_name: Release ${{ github.ref_name }}
-              draft: false
-              prerelease: false
-
-          - name: Upload main.js to Release
-            uses: actions/upload-release-asset@v1
-            env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            with:
-              upload_url: ${{ steps.create_release.outputs.upload_url }}
-              asset_path: ./main.js # Adjust path if build outputs to dist/
-              asset_name: main.js
-              asset_content_type: application/javascript
-
-          - name: Upload manifest.json to Release
-            uses: actions/upload-release-asset@v1
-            env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            with:
-              upload_url: ${{ steps.create_release.outputs.upload_url }}
-              asset_path: ./manifest.json # Adjust path if build outputs to dist/
-              asset_name: manifest.json
-              asset_content_type: application/json
-
-          # Optional: Create a zip archive of the plugin files
-          - name: Create ZIP archive
-            run: zip auto-slugger-plugin.zip main.js manifest.json # Add styles.css if present
-
-          - name: Upload ZIP to Release
-            uses: actions/upload-release-asset@v1
-            env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            with:
-              upload_url: ${{ steps.create_release.outputs.upload_url }}
-              asset_path: ./auto-slugger-plugin.zip
-              asset_name: auto-slugger-plugin-${{ github.ref_name }}.zip
-              asset_content_type: application/zip
-    ```
-    *Note: Ensure the `asset_path` for `main.js` and `manifest.json` in the upload steps matches where your `npm run build` command places these files (e.g., project root or a `dist/` folder).*
-
-2.  **Using the Workflow:**
-    *   Commit and push this `.github/workflows/release.yml` file to your repository.
-    *   When you are ready to release a new version:
-        1.  Ensure your `manifest.json` has the correct new version number.
-        2.  Commit any changes.
-        3.  Create a git tag: `git tag v1.0.1` (replace `v1.0.1` with your new version).
-        4.  Push the tag to GitHub: `git push origin v1.0.1`.
-    *   GitHub Actions will automatically run the workflow, build the plugin, create a new GitHub Release, and upload `main.js`, `manifest.json`, and the zip file as assets. These assets are what users will download in "Method 2: Manual Install from GitHub Releases".
-
----
-
-## 🤝 Contributing & Support
-
-Found a bug or have an idea? Please open an issue on the [GitHub repository issues page](https://github.com/rwnq8/obsidian-auto-slugger/issues)! Pull requests are also welcome.
+*   **Something's not working as expected?**
+    *   Double-check the Auto Slugger settings first.
+    *   Try restarting Obsidian (turn it off and on again). This solves many small issues!
+*   **Found a bug or have a feature idea?**
+    *   Please let us know by creating an "Issue" on our GitHub page:
+        [https://github.com/rwnq8/obsidian-auto-slugger/issues](https://github.com/rwnq8/obsidian-auto-slugger/issues)
 
 ---
 
 ## 📜 License
 
-This plugin and its content are licensed under the **QNFO Content License Agreement**.
-You can view the full license terms here: [https://github.com/QNFO/license/blob/main/LICENSE.md](https://github.com/QNFO/license/blob/main/LICENSE.md)
-
-By using, distributing, or contributing to this plugin, you agree to be bound by the terms of this license. Please review the full license for details on usage, attribution, and other conditions.
+This plugin is provided under the **QNFO Content License Agreement**.
+You can read the full terms here: [https://github.com/QNFO/license/blob/main/LICENSE.md](https://github.com/QNFO/license/blob/main/LICENSE.md)
 
 ---
 
-Happy slugging!
+## <a id="-alternative-installation-methods"></a>Alternative Installation Methods (If BRAT doesn't work for you)
+
+While BRAT is recommended, here's how to install manually if needed. This is a bit more technical.
+
+1.  **Go to the Releases Page:**
+    *   Open this link in your web browser: `https://github.com/rwnq8/obsidian-auto-slugger/releases`
+2.  **Download Files:**
+    *   Find the latest release.
+    *   Under the "Assets" section, download `main.js` AND `manifest.json`.
+    *   (If you see a `.zip` file like `auto-slugger-v1.0.0.zip`, download that instead, then open it to find `main.js` and `manifest.json` inside.)
+3.  **Place Files in Your Obsidian Vault:**
+    *   Open your Obsidian vault folder on your computer.
+    *   Inside your vault, find a folder named `.obsidian`. (If you don't see it, you might need to enable "Show hidden files" in your computer's file explorer settings.)
+    *   Inside `.obsidian`, find a folder named `plugins`. If it's not there, create it.
+    *   Inside `plugins`, create a **new folder** and name it exactly: `auto-slugger`
+    *   Copy the `main.js` and `manifest.json` files you downloaded into this new `auto-slugger` folder.
+4.  **Enable in Obsidian:**
+    *   Close and re-open Obsidian completely.
+    *   Go to `Settings` ⚙️ > `Community Plugins`.
+    *   Find "Auto Slugger" and **toggle it ON**.
+
+---
+
+Happy Slugging!
