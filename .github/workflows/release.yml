@@ -3,13 +3,14 @@ name: Build Plugin and Create Release
 on:
   push:
     tags:
-      - 'v*' # This will match v1.0.1
+      - 'v*' # This will match v1.0.2 and future version tags
 
 jobs:
   build_and_release:
     runs-on: ubuntu-latest
-    permissions: # Crucial fix from previous step
-      contents: write 
+    permissions:
+      contents: write # Allows the Action to create releases and upload assets
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -20,19 +21,19 @@ jobs:
           node-version: '18' 
 
       - name: Install dependencies
-        run: npm install 
+        run: npm install # Using npm install as no local package-lock.json is generated/committed
 
       - name: Build plugin
-        run: npm run build 
+        run: npm run build # Uses the build script from package.json
 
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Automatically provided by GitHub
         with:
-          tag_name: ${{ github.ref }} # This will be v1.0.1
-          release_name: Release ${{ github.ref_name }} # This will be Release v1.0.1
+          tag_name: ${{ github.ref }} # Dynamically uses the tag that triggered the workflow (e.g., refs/tags/v1.0.2)
+          release_name: Release ${{ github.ref_name }} # Dynamically creates release title (e.g., Release v1.0.2)
           draft: false
           prerelease: false
 
@@ -42,7 +43,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./main.js 
+          asset_path: ./main.js # Assumes main.js is in the root after build
           asset_name: main.js
           asset_content_type: application/javascript
 
@@ -52,12 +53,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./manifest.json 
+          asset_path: ./manifest.json # Assumes manifest.json is in the root
           asset_name: manifest.json
           asset_content_type: application/json
 
       - name: Create ZIP archive
-        run: zip auto-slugger-plugin.zip main.js manifest.json 
+        run: zip auto-slugger-plugin.zip main.js manifest.json # Assumes files are in root
 
       - name: Upload ZIP to Release
         uses: actions/upload-release-asset@v1
@@ -66,5 +67,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./auto-slugger-plugin.zip
-          asset_name: auto-slugger-plugin-${{ github.ref_name }}.zip # Will be auto-slugger-plugin-v1.0.1.zip
+          asset_name: auto-slugger-plugin-${{ github.ref_name }}.zip # e.g., auto-slugger-plugin-v1.0.2.zip
           asset_content_type: application/zip
