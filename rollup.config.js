@@ -5,9 +5,9 @@ import commonjs from '@rollup/plugin-commonjs';
 const isProd = (process.env.BUILD === 'production');
 
 export default {
-    input: 'main.ts', // or './src/main.ts' if you put files in src
+    input: 'main.ts',
     output: {
-        dir: '.', // Output to root, or 'dist/'
+        dir: '.',
         sourcemap: 'inline',
         sourcemapExcludeSources: isProd,
         format: 'cjs',
