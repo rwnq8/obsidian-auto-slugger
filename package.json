@@ -1,6 +1,6 @@
 {
   "name": "obsidian-auto-slugger",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Automatically or manually create clean, descriptive slugs for your Obsidian notes (e.g., `104538-auto-slugger-plugin`). Great for permalinks, better organization, and web publishing!",
   "main": "main.js",
   "scripts": {
