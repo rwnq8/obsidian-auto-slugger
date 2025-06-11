@@ -1,0 +1,8 @@
+{
+  // ... other package.json content ...
+  "scripts": {
+    "dev": "rollup --config rollup.config.js -w",
+    "build": "rollup --config rollup.config.js --environment BUILD:production"
+  }
+  // ...
+}

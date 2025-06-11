@@ -1,0 +1,10 @@
+{
+    "id": "auto-slugger",
+    "name": "Auto Slugger",
+    "version": "1.0.0",
+    "minAppVersion": "0.15.0",
+    "description": "Automatically or manually generates a slug for the current note (e.g., 104538-slug-plugin).",
+    "author": "Your Name",
+    "authorUrl": "https://yourwebsite.com",
+    "isDesktopOnly": false
+}
