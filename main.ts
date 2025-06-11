@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Notice, Plugin, TFile, FrontMatterCache, debounce } from 'obsidian';
+import { App, Editor, MarkdownView, Notice, Plugin, TFile, FrontMatterCache, debounce, TAbstractFile, Workspace, Vault } from 'obsidian'; // Added Workspace, Vault for explicit typing
 import { AutoSluggerSettings, DEFAULT_SETTINGS, AutoSluggerSettingTab } from './settings';
 
 export default class AutoSluggerPlugin extends Plugin {
@@ -42,37 +42,41 @@ export default class AutoSluggerPlugin extends Plugin {
             await this.generateAndApplySlug(file, data, true); 
         }, 1500, true);
 
-
+        // Corrected event listeners with explicit types
         this.registerEvent(
-            this.app.workspace.on('editor-change', (editor, info) => {
-                if (info.file && this.settings.automaticGeneration && this.settings.triggerEvent === 'on-change') {
-                    this.debouncedGenerateForOnChange(info.file, editor.getValue());
+            this.app.workspace.on('editor-change', (editor: Editor, info: MarkdownView | TFile) => { // More specific type for info if possible
+                // The 'info' type for 'editor-change' can be MarkdownView or TFile depending on context.
+                // We need to ensure 'info.file' exists and is a TFile.
+                let currentFile: TFile | null = null;
+                if (info instanceof MarkdownView) {
+                    currentFile = info.file;
+                } else if (info instanceof TFile) {
+                    currentFile = info;
+                }
+
+                if (currentFile && this.settings.automaticGeneration && this.settings.triggerEvent === 'on-change') {
+                    this.debouncedGenerateForOnChange(currentFile, editor.getValue());
                 }
             })
         );
         
-        this.registerEvent(
-            this.app.workspace.on('editor-blur', (editor, info) => {
-                 if (info.file && this.settings.automaticGeneration && this.settings.triggerEvent === 'on-save-or-blur') {
-                    this.generateAndApplySlug(info.file, editor.getValue(), true); 
-                }
-            })
-        );
+        // 'editor-blur' is not a standard documented event for app.workspace.on.
+        // Let's use 'active-leaf-change' and check if focus is lost, or rely on 'file-close' or 'layout-change'.
+        // For simplicity and directness, 'editor-save' (if it existed) or 'file-save' (from vault) is better.
+        // 'editor-blur' is not a reliable event name here.
+        // We will rely on the vault 'save' event for the 'on-save-or-blur' trigger.
+        // If you specifically need blur, it would require more complex DOM event handling on editor instances.
+
          this.registerEvent(
-            this.app.vault.on('save', (file) => {
+            this.app.vault.on('modify', (file: TAbstractFile) => { // 'modify' is often used for save-like events
                 if (file instanceof TFile && file.extension === "md" && 
                     this.settings.automaticGeneration && 
                     this.settings.triggerEvent === 'on-save-or-blur') {
-                    const activeFile = this.app.workspace.getActiveFile();
-                    // Only trigger on save if the saved file is not the one currently being edited
-                    // to avoid double-triggering with editor-blur.
-                    // This might still double trigger if focus is lost AND then file is saved externally.
-                    // A more robust solution might involve tracking last processed time/content.
-                    if (!activeFile || activeFile.path !== file.path) {
-                        this.app.vault.read(file).then(content => {
-                            this.generateAndApplySlug(file, content, true); 
-                        });
-                    }
+                    // 'modify' can fire frequently. Consider if 'editor-blur' was intended.
+                    // Using 'modify' as a proxy for save/blur.
+                    this.app.vault.cachedRead(file).then(content => { // Use cachedRead for potentially faster access
+                        this.generateAndApplySlug(file, content, true); 
+                    });
                 }
             })
         );
@@ -90,8 +94,6 @@ export default class AutoSluggerPlugin extends Plugin {
     }
 
     updateStopWords() {
-        // Use DEFAULT_SETTINGS.customStopWords as the base if user's customStopWords is empty,
-        // otherwise, user's input completely overrides.
         const baseStopWords = (this.settings.customStopWords.trim() === '') ? DEFAULT_SETTINGS.customStopWords : this.settings.customStopWords;
         const stopWordsArray = baseStopWords.split(',').map(s => s.trim().toLowerCase()).filter(s => s.length > 0);
         this.stopWords = new Set(stopWordsArray);
@@ -126,7 +128,6 @@ export default class AutoSluggerPlugin extends Plugin {
         if (word.endsWith('sses') || word.endsWith('ies')) {
             word = word.substring(0, word.length - 2);
         } else if (word.endsWith('ss')) {
-            // keep 'ss'
         } else if (word.endsWith('s') && word.length > 1 && word[word.length-2] !== 's') {
             word = word.substring(0, word.length - 1);
         }
@@ -155,11 +156,11 @@ export default class AutoSluggerPlugin extends Plugin {
         if (word.length > 4 && word.endsWith('ing')) {
             if (word.length > 4 && word[word.length-4] === word[word.length-5] && !(['l','s','z'].includes(word[word.length-4]))) {
                  word = word.substring(0, word.length - 4);
-            } else if (word.length > 3) { // Check length before substring
+            } else if (word.length > 3) { 
                  word = word.substring(0, word.length - 3);
             }
         } else if (word.length > 3 && word.endsWith('ed')) {
-             if (word.length > 3) { // Check length before substring
+             if (word.length > 3) { 
                 word = word.substring(0, word.length - 2);
             }
         } else if (word.length > 3 && word.endsWith('ly')) {
@@ -182,19 +183,18 @@ export default class AutoSluggerPlugin extends Plugin {
         cleanContent = cleanContent.replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1'); 
         cleanContent = cleanContent.replace(/[*_~#]+/g, ''); 
 
-        // Use a regex that better handles word boundaries and avoids splitting mid-word with apostrophes
-        let words = cleanContent.match(/\b[a-zA-Z0-9']+\b/g) || [];
+        let words: string[] = cleanContent.match(/\b[a-zA-Z0-9']+\b/g) || []; // Explicitly type as string[]
         words = words.map(word => word.toLowerCase().trim());
             
         words = words.filter(word => {
             return !/^\d+$/.test(word) && !this.stopWords.has(word); 
         });
 
-        let processedWordsForIndexing = [...words]; // Keep a copy for original indexing after stop words
+        let processedWordsForIndexing: string[] = [...words];  // Explicitly type as string[]
 
         if (this.settings.enableStemming) {
             words = words.map(word => this.stemWord(word));
-            processedWordsForIndexing = processedWordsForIndexing.map(word => this.stemWord(word)); // Also stem this list
+            processedWordsForIndexing = processedWordsForIndexing.map(word => this.stemWord(word)); 
         }
 
         words = words.filter(word => word.length >= this.settings.minWordLength);
@@ -207,13 +207,18 @@ export default class AutoSluggerPlugin extends Plugin {
             wordFrequencies[word] = (wordFrequencies[word] || 0) + 1;
         });
 
-        const uniqueWords = [...new Set(words)]; 
+        const uniqueWords: string[] = [...new Set(words)]; // Explicitly type as string[]
         
         uniqueWords.sort((a, b) => {
             const freqDiff = wordFrequencies[b] - wordFrequencies[a];
             if (freqDiff !== 0) return freqDiff;
-            // Tie-breaking: use the index from the list that has been filtered and stemmed
-            return processedWordsForIndexing.indexOf(a) - processedWordsForIndexing.indexOf(b); 
+            const indexA = processedWordsForIndexing.indexOf(a);
+            const indexB = processedWordsForIndexing.indexOf(b);
+            // Handle cases where a word might not be in processedWordsForIndexing (should be rare if logic is aligned)
+            if (indexA === -1 && indexB === -1) return 0;
+            if (indexA === -1) return 1; // Put words not found at the end
+            if (indexB === -1) return -1; // Keep words found at the beginning
+            return indexA - indexB; 
         });
 
         return uniqueWords.slice(0, this.settings.significantWordCount).map(w => this.sanitizeWord(w)).filter(w => w.length > 0);
@@ -236,11 +241,10 @@ export default class AutoSluggerPlugin extends Plugin {
         }
 
         const newSlug = this.generateSlug(content);
-        // Check if slug is just the timestamp (meaning no significant words were found)
         const justTimestamp = newSlug === this.getTimestamp(); 
 
-        if (!newSlug || (justTimestamp && this.settings.significantWordCount > 0) || newSlug.startsWith('-') || newSlug.endsWith('-')) { 
-            if (!isAutomatic && !(justTimestamp && this.settings.significantWordCount > 0)) { // Avoid notice if it's just a timestamp and words were expected
+        if (!newSlug || (justTimestamp && this.settings.significantWordCount > 0 && this.getSignificantWords(content).length === 0) || newSlug.startsWith('-') || newSlug.endsWith('-')) { 
+            if (!isAutomatic && !(justTimestamp && this.settings.significantWordCount > 0 && this.getSignificantWords(content).length === 0)) { 
                  new Notice('Slug generation resulted in an empty or invalid slug. Check content and settings.');
             }
             return;
