@@ -1,7 +1,7 @@
 {
   "id": "auto-slugger",
   "name": "Auto Slugger",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "minAppVersion": "0.15.0",
   "description": "Automatically or manually creates a slug for the current note (e.g., 104538-slug-plugin).",
   "author": "rwnq8",
