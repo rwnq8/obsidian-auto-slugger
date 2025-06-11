@@ -1,22 +1,15 @@
-{
-  "name": "obsidian-auto-slugger",
-  "version": "1.0.0",
-  "description": "Automatically or manually create clean, descriptive slugs for your Obsidian notes (e.g., `104538-auto-slugger-plugin`). Great for permalinks, better organization, and web publishing!",
-  "main": "main.js",
+  Change this:
+  ```json
   "scripts": {
     "dev": "rollup --config rollup.config.js -w",
     "build": "rollup --config rollup.config.js --environment BUILD:production"
   },
-  "keywords": [],
-  "author": "rwnq8",
-  "license": "QNFO",
-  "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-typescript": "^11.1.6",
-    "obsidian": "latest",
-    "rollup": "^4.9.6",
-    "tslib": "^2.6.2",
-    "typescript": "^5.3.3"
-  }
-}
+  ```
+  To this:
+  ```json
+  "scripts": {
+    "dev": "rollup --config rollup.config.js -w --bundleConfigAsCjs",
+    "build": "rollup --config rollup.config.js --environment BUILD:production --bundleConfigAsCjs"
+  },
+  ```
+  (Add `--bundleConfigAsCjs` to both `dev` and `build` scripts for consistency).
