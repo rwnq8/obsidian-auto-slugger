@@ -141,9 +141,7 @@ Found a bug or have an idea? Please open an issue on the [GitHub repository issu
 
 ## 📜 License
 
-This plugin and its content are licensed under the **QNFO Content License Agreement**.
-
-You can view the full license terms here: [https://github.com/QNFO/license/blob/main/LICENSE.md](https://github.com/QNFO/license/blob/main/LICENSE.md)
+This plugin and its content are licensed under the **[QNFO Content License Agreement](https://github.com/QNFO/license)**.
 
 By using, distributing, or contributing to this plugin, you agree to be bound by the terms of this license. Non-commercial use only. Attribution required.
 
