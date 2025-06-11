@@ -1,10 +1,52 @@
 {
-    "id": "auto-slugger",
-    "name": "Auto Slugger",
-    "version": "1.0.0",
-    "minAppVersion": "0.15.0",
-    "description": "Automatically or manually generates a slug for the current note (e.g., 104538-slug-plugin).",
-    "author": "Your Name",
-    "authorUrl": "https://yourwebsite.com",
-    "isDesktopOnly": false
+  "id": "auto-slugger",
+  "name": "Auto Slugger",
+  "version": "1.0.0",
+  "minAppVersion": "0.15.0",
+  "description": "Automatically or manually creates a slug for the current note (e.g., 104538-slug-plugin).",
+  "author": "rwnq8",
+  "authorUrl": "https://github.com/rwnq8/obsidian-auto-slugger",
+  "isDesktopOnly": false
 }
+```*(If your `authorUrl` or `author` in `manifest.json` should be different, please let me know, but `rwnq8` is consistent with the repo name).*
+
+**Next Steps (Again, apologies for making this take longer than it should):**
+
+1.  **Update `package.json` on GitHub:**
+    *   Go to your `package.json` file in the `rwnq8/obsidian-auto-slugger` repository.
+    *   Click "Edit".
+    *   Replace its entire content with the first code block above.
+    *   Commit this change directly to your `main` (or default) branch.
+
+2.  **Update `manifest.json` on GitHub:**
+    *   Go to your `manifest.json` file in the repository.
+    *   Click "Edit".
+    *   Replace its entire content with the second code block above.
+    *   Commit this change directly to your `main` (or default) branch.
+
+3.  **Re-trigger the GitHub Actions Workflow for `v1.0.0`:**
+    *   Since the `v1.0.0` tag already exists and the workflow likely failed or didn't run correctly with the previous invalid `package.json`:
+        *   **Delete the `v1.0.0` GitHub Release:** Go to the "Releases" page of your repository and delete the `v1.0.0` release. This is important because the workflow will try to create it.
+        *   **Delete the `v1.0.0` Tag from GitHub:**
+            *   If you have Git installed locally (even if you don't build with it), the easiest way is:
+                ```bash
+                git pull # To make sure your local repo knows about remote changes
+                git push --delete origin v1.0.0
+                ```
+            *   If you don't use Git locally, deleting tags via the GitHub UI can be a bit hidden. Sometimes it's easier to delete and re-create the release, ensuring the tag is also handled.
+        *   **Delete the `v1.0.0` Tag Locally (if it exists and you use Git locally):**
+            ```bash
+            git tag -d v1.0.0
+            ```        *   **Re-create and Push the Tag:**
+            *   Make sure your local `main` branch is up-to-date with the committed changes to `package.json` and `manifest.json`.
+            *   Then, re-tag the correct commit:
+                ```bash
+                # Ensure you are on the commit that has the updated json files
+                git tag v1.0.0
+                git push origin v1.0.0
+                ```
+            *   If you're not using Git locally for tagging, after committing the JSON file changes via the web UI, you might need to draft a *new* release on GitHub, specify `v1.0.0` as the tag, and ensure it's targeting your `main` branch. This act of creating the release *with that tag* should trigger the workflow.
+
+Once these files are correct in your `main` branch, and the `v1.0.0` tag is pushed *anew*, the GitHub Action should trigger, successfully read the valid `package.json`, install dependencies, build your plugin, create the GitHub Release for `v1.0.0`, and upload the correct `main.js` and `manifest.json` (with version `1.0.0` inside) as assets.
+
+I appreciate your directness. Let's get this working.
